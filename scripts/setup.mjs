@@ -1,0 +1,3 @@
+import {existsSync,readFileSync,writeFileSync} from "node:fs";import {randomBytes} from "node:crypto";
+if(existsSync(".env.local")){console.log(".env.local already exists; existing settings preserved.");process.exit(0);}
+const example=readFileSync(".env.example","utf8");writeFileSync(".env.local",example.replace("ADMIN_PASSWORD=","ADMIN_PASSWORD="+randomBytes(15).toString("base64url")).replace("SESSION_SECRET=","SESSION_SECRET="+randomBytes(48).toString("hex")).replace("CRON_SECRET=","CRON_SECRET="+randomBytes(32).toString("hex")));console.log("Created .env.local. Read ADMIN_PASSWORD locally to log in. Add your 3 bot tokens and chat IDs there.");

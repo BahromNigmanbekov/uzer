@@ -1,0 +1,14 @@
+services:
+  uzer:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: .env.local
+    environment:
+      DATABASE_PATH: /app/data/uzer.sqlite
+      UPLOAD_PATH: /app/data/uploads
+    volumes:
+      - uzer_data:/app/data
+    restart: unless-stopped
+volumes:
+  uzer_data:

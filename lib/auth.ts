@@ -1,0 +1,6 @@
+import "server-only";import {createHmac,timingSafeEqual} from "node:crypto";import {cookies} from "next/headers";
+function signature(value:string){return createHmac("sha256",process.env.SESSION_SECRET||"").update(value).digest("hex");}
+export function checkPassword(password:string){const expected=process.env.ADMIN_PASSWORD;if(!expected||!process.env.SESSION_SECRET)return false;const a=Buffer.from(password),b=Buffer.from(expected);return a.length===b.length&&timingSafeEqual(a,b);}
+export async function login(){const expiry=String(Date.now()+1000*60*60*12);(await cookies()).set("uzer_admin",expiry+"."+signature(expiry),{httpOnly:true,secure:process.env.NODE_ENV==="production",sameSite:"strict",path:"/",maxAge:43200});}
+export async function isAdmin(){if(!process.env.SESSION_SECRET)return false;const token=(await cookies()).get("uzer_admin")?.value;if(!token)return false;const [expiry,sig]=token.split(".");if(!/^\d+$/.test(expiry)||!Number.isFinite(Number(expiry))||Number(expiry)<Date.now()||!sig)return false;const a=Buffer.from(sig),b=Buffer.from(signature(expiry));return a.length===b.length&&timingSafeEqual(a,b);}
+export async function logout(){(await cookies()).delete("uzer_admin");}

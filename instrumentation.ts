@@ -1,0 +1,1 @@
+export async function register(){if(process.env.NEXT_RUNTIME!=="nodejs"||process.env.VERCEL)return;const state=globalThis as unknown as {uzerRetry?:ReturnType<typeof setInterval>};if(state.uzerRetry)return;const {deliver}=await import("./lib/telegram");state.uzerRetry=setInterval(()=>{void deliver();},30000);state.uzerRetry.unref();}

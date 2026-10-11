@@ -1,0 +1,1 @@
+import type {NextConfig} from "next"; const config:NextConfig={output:"standalone",poweredByHeader:false,images:{remotePatterns:[{protocol:"https",hostname:"i.ibb.co"}]},serverExternalPackages:["@libsql/client","libsql"]};export default config;
