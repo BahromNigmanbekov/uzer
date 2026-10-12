@@ -1,4 +1,4 @@
 import type {Metadata} from "next";import localFont from "next/font/local";import "./globals.css";import "./store.css";
 const manrope=localFont({src:"../public/fonts/manrope.ttf",variable:"--font-manrope",display:"swap"});const inter=localFont({src:"../public/fonts/inter.ttf",variable:"--font-inter",display:"swap"});const zen=localFont({src:"../public/fonts/zen-dots.ttf",variable:"--font-zen",display:"swap"});
-export const metadata:Metadata={title:"UZER — O‘z uslubingni tanla",description:"UZER kiyimlar va aksessuarlar do‘koni. O‘z uslubingni tanla.",icons:{icon:"/icon.svg"}};
+export const metadata:Metadata={title:"UZER — O‘z uslubingni tanla",description:"UZER kiyimlar va aksessuarlar do‘koni. O‘z uslubingni tanla.",icons:{icon:"/icon.png"}};
 export default function Layout({children}:{children:React.ReactNode}){return <html lang="uz" className={inter.variable+" "+zen.variable+" "+manrope.variable}><body>{children}</body></html>;}
