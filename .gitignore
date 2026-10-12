@@ -9,3 +9,4 @@ data/
 artifacts/
 .openai/
 worker/
+.vercel
