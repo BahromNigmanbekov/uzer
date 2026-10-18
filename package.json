@@ -12,6 +12,9 @@
     "test:browser": "node tests/brand-browser.mjs",
     "test:preserved": "node tests/preserved-storefront.mjs",
     "test:variants": "node tests/product-variants.mjs",
+    "test:api": "node tests/api-sync.mjs",
+    "test:api-data": "node tests/api-data.mjs",
+    "test:telegram": "node tests/telegram-delivery.mjs",
     "migrate:cloud": "node scripts/migrate-cloud.mjs",
     "test:cloud": "node tests/cloud.mjs",
     "predev": "node scripts/campaign-assets.mjs"

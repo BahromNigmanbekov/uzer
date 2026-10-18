@@ -25,7 +25,7 @@ let log='',checks=0,browser;
 function check(value,label){assert.ok(value,label);checks++;results.push(label);console.log('PASS '+label);}
 async function start(port,configured=true,overrides={}){
   const p=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port',String(port)],{
-    env:{...process.env,VERCEL:'1',PRODUCT_API_URL:'http://127.0.0.1:1/offline',TURSO_DATABASE_URL:configured?fixture.url:'',TURSO_AUTH_TOKEN:configured?'fixture-token':'',BLOB_READ_WRITE_TOKEN:'',DATABASE_PATH:resolve(dir,'forbidden','db.sqlite'),ADMIN_PASSWORD:'cloud-test-password',SESSION_SECRET:'cloud-test-session-secret-32-characters',CRON_SECRET:'cloud-test-cron-secret',STOCK_BOT_TOKEN:'',ORDER_BOT_TOKEN:'',SUPPORT_BOT_TOKEN:'',NEXT_TELEMETRY_DISABLED:'1',...overrides},
+    env:{...process.env,PRODUCT_API_SYNC:"false",VERCEL:'1',PRODUCT_API_URL:'http://127.0.0.1:1/offline',TURSO_DATABASE_URL:configured?fixture.url:'',TURSO_AUTH_TOKEN:configured?'fixture-token':'',BLOB_READ_WRITE_TOKEN:'',DATABASE_PATH:resolve(dir,'forbidden','db.sqlite'),ADMIN_PASSWORD:'cloud-test-password',SESSION_SECRET:'cloud-test-session-secret-32-characters',CRON_SECRET:'cloud-test-cron-secret',STOCK_BOT_TOKEN:'',ORDER_BOT_TOKEN:'',SUPPORT_BOT_TOKEN:'',NEXT_TELEMETRY_DISABLED:'1',...overrides},
     stdio:['ignore','pipe','pipe']
   });
   processes.set(port,p);p.stdout.on('data',b=>log+=b);p.stderr.on('data',b=>log+=b);
@@ -156,7 +156,7 @@ try{
   const reset=new DatabaseSync(file);
   reset.exec("DELETE FROM products;DELETE FROM settings WHERE key='imported';");reset.close();
   const catalogs=await Promise.all([call(3111,'/api/products'),call(3112,'/api/products')]);
-  check(catalogs.every(x=>x.r.ok&&x.data.length===snapshot.length),'parallel cold starts initialize all products when source API is offline');
+  check(catalogs.every(x=>x.r.ok&&x.data.length===snapshot.filter(p=>p.active!==false).length),'parallel cold starts initialize active products when source API is offline');
   a=await call(3111,'/api/products');
   check(a.data.every(p=>{const source=snapshot.find(x=>x.id===p.id);return source&&source.stock===p.stock&&JSON.stringify(source.sizes)===JSON.stringify(p.sizes);}), 'cached first import preserves exact snapshot size stock');
   console.log(checks+' cloud checks passed.');

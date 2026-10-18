@@ -5,7 +5,7 @@ import vm from "node:vm";
 const source=stripTypeScriptTypes(readFileSync("lib/product-variants.ts","utf8"));
 const names=[...source.matchAll(/export (?:const|function) (\w+)/g)].map(match=>match[1]);
 const api=vm.runInNewContext(`(()=>{${source.replace(/export (?=const|function)/g,"")}\nreturn {${names.join(",")}}})()`);
-const products=JSON.parse(readFileSync("lib/initial-products.json","utf8"));
+const products=JSON.parse(readFileSync("tests/fixtures/legacy-products.json","utf8"));
 const product=id=>products.find(p=>p.id===String(id));
 const models=api.groupedProducts(products);
 assert.equal(models.length,7);

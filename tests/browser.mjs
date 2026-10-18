@@ -2,13 +2,13 @@ import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {spawn} from 'node:child_process';
-import {mkdirSync,rmSync,writeFileSync} from 'node:fs';
+import {mkdirSync,rmSync,writeFileSync,readFileSync} from 'node:fs';
 import {resolve,dirname,basename} from 'node:path';
 import {randomUUID} from 'node:crypto';
 const dir=resolve('data','test-redesign-'+randomUUID());mkdirSync(dir,{recursive:true});const artifact='artifacts/uzer-redesign';mkdirSync(artifact,{recursive:true});
-const source=new DatabaseSync('data/uzer.sqlite',{readOnly:true});const initial=source.prepare('SELECT data FROM products').all().map(r=>JSON.parse(r.data));source.close();
+const initial=JSON.parse(readFileSync('tests/fixtures/legacy-products.json','utf8'));
 const database=resolve(dir,'test.sqlite'),db=new DatabaseSync(database);db.exec("CREATE TABLE products(id TEXT PRIMARY KEY,data TEXT NOT NULL);CREATE TABLE settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);INSERT INTO settings VALUES('imported','1');");for(const p of initial)db.prepare('INSERT INTO products VALUES(?,?)').run(p.id,JSON.stringify(p));db.close();
-const port=3108,base='http://127.0.0.1:'+port;const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port',String(port)],{env:{...process.env,TURSO_DATABASE_URL:"",TURSO_AUTH_TOKEN:"",BLOB_READ_WRITE_TOKEN:"",VERCEL:"",DATABASE_PATH:database,UPLOAD_PATH:resolve(dir,'uploads'),ADMIN_PASSWORD:'browser-test-password',SESSION_SECRET:'browser-test-secret-32-characters',STOCK_BOT_TOKEN:'',ORDER_BOT_TOKEN:'',SUPPORT_BOT_TOKEN:'',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});let log='';server.stdout.on('data',s=>log+=s);server.stderr.on('data',s=>log+=s);let browser,page;const errors=[],results=[];function check(v,label){assert.ok(v,label);results.push(label);console.log('PASS '+label);}
+const port=3108,base='http://127.0.0.1:'+port;const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','--hostname','127.0.0.1','--port',String(port)],{env:{...process.env,PRODUCT_API_SYNC:"false",TURSO_DATABASE_URL:"",TURSO_AUTH_TOKEN:"",BLOB_READ_WRITE_TOKEN:"",VERCEL:"",DATABASE_PATH:database,UPLOAD_PATH:resolve(dir,'uploads'),ADMIN_PASSWORD:'browser-test-password',SESSION_SECRET:'browser-test-secret-32-characters',STOCK_BOT_TOKEN:'',ORDER_BOT_TOKEN:'',SUPPORT_BOT_TOKEN:'',NEXT_TELEMETRY_DISABLED:'1'},stdio:['ignore','pipe','pipe']});let log='';server.stdout.on('data',s=>log+=s);server.stderr.on('data',s=>log+=s);let browser,page;const errors=[],results=[];function check(v,label){assert.ok(v,label);results.push(label);console.log('PASS '+label);}
 async function shot(name,fullPage=false){await page.evaluate(()=>document.fonts.ready);if(fullPage){const height=await page.evaluate(()=>document.documentElement.scrollHeight);for(let y=0;y<height;y+=800){await page.evaluate(y=>window.scrollTo(0,y),y);await page.waitForTimeout(100);}await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(200);}await page.screenshot({path:artifact+'/'+name+'.png',fullPage});}
 async function api(path,method='GET',body){const r=await page.request.fetch(base+path,{method,data:body});return {status:r.status(),data:await r.json()};}
 try{
