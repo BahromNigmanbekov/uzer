@@ -6,6 +6,9 @@
 @media(max-width:767px){.store-site .store-footer .footer-wordmark{font-size:22vw;padding:35px 5px;line-height:1.2}}
 .store-site h1,.store-site h2,.store-site .account-heading p{overflow-wrap:anywhere}
 /* UZER: white surfaces, navy accents, compact responsive photography. */
+.store-site .store-header .brand-image-link,.store-site .mobile-menu-heading .brand-image-link{display:flex;align-items:center;line-height:0;letter-spacing:0}
+.store-site .brand-logo-image{display:block;width:104px;height:auto;max-height:62px;object-fit:contain}
+@media(max-width:767px){.store-site .brand-logo-image{width:86px;max-height:50px}.store-site .mobile-menu-heading .brand-logo-image{width:78px}}
 .store-site{--uzer-navy:#07064D;--uzer-white:#fff;background:#fff;color:#151515}
 .store-site .store-header{background:#fff;transition:transform .22s ease,background .2s ease,box-shadow .2s ease;will-change:transform}
 .store-site .store-header.header-hidden{transform:translateY(-105%);pointer-events:none}
