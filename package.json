@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "test": "node tests/integration.mjs",
     "setup": "node scripts/setup.mjs",
-    "test:browser": "node tests/browser.mjs",
+    "test:browser": "node tests/brand-browser.mjs",
+    "test:preserved": "node tests/preserved-storefront.mjs",
+    "test:variants": "node tests/product-variants.mjs",
     "migrate:cloud": "node scripts/migrate-cloud.mjs",
     "test:cloud": "node tests/cloud.mjs",
     "predev": "node scripts/campaign-assets.mjs"

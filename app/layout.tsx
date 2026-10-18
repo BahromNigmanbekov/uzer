@@ -1,5 +1,5 @@
-import type {Metadata,Viewport} from "next";import localFont from "next/font/local";import "./globals.css";import "./store.css";
-export const viewport:Viewport={themeColor:"#07064D"};
+import type {Metadata,Viewport} from "next";import localFont from "next/font/local";import "./globals.css";import "./store.css";import "./uzer7.css";
+export const viewport:Viewport={themeColor:"#000000"};
 const manrope=localFont({src:"../public/fonts/manrope.ttf",variable:"--font-manrope",display:"swap"});const inter=localFont({src:"../public/fonts/inter.ttf",variable:"--font-inter",display:"swap"});const zen=localFont({src:"../public/fonts/zen-dots.ttf",variable:"--font-zen",display:"swap"});
 export const metadata:Metadata={metadataBase:new URL("https://www.uzer7.uz"),applicationName:"UZER7",title:"UZER7 — Toshkentda kiyim va aksessuarlar",description:"UZER7 — Toshkentdagi kiyim va aksessuarlar do‘koni. Hudi, futbolka, kepka va sumkalarni tanlang.",icons:{icon:{url:"/uzer7-logo.png",type:"image/png"},apple:"/uzer7-logo.png"}};
 export default function Layout({children}:{children:React.ReactNode}){return <html lang="uz" className={inter.variable+" "+zen.variable+" "+manrope.variable}><body>{children}</body></html>;}
